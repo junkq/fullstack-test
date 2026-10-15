@@ -1,0 +1,31 @@
+body {
+    background: #f5f7fa;
+    color: #20252b;
+}
+
+.comment-card {
+    border: 0;
+    border-left: 4px solid #3478c7;
+}
+
+.comment-text {
+    line-height: 1.6;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}
+
+.comment-meta {
+    gap: .75rem;
+}
+
+@media (max-width: 575.98px) {
+    .form-inline .custom-select {
+        width: 100%;
+        margin: .4rem 0 0 !important;
+    }
+
+    .comment-meta {
+        align-items: flex-start !important;
+        flex-direction: column;
+    }
+}

@@ -1,89 +1,67 @@
-# Тестовое задание на основе Docker и CodeIgniter для Fullstack разработчика
+Тестовое задание на CodeIgniter 4. Приложение позволяет добавлять и удалять комментарии, сортировать их по ID или дате и переключать страницы. На одной странице выводится 3 комментария.
 
-## Первоначальная настройка
+## Запуск
 
--   Устанавливаем Docker c [официального сайта](https://www.docker.com/products/docker-desktop) и [Docker Compose](https://docs.docker.com/compose/install/);
--   Для пользователей Windows дополнительно необходимо установить виртуальное ядро Linux, следуя данной [инструкции](https://docs.docker.com/desktop/install/windows-install/);
--   Собираем контейнер командой в папке проекта `docker-compose up -d`;
--   Инициализируем сервер:
-    -   при запущенном контейнере в папке проекта запускаем команду `docker-compose exec web bash`;
-    -   запускаем сборку `composer install`.
+Понадобятся Docker и Docker Compose.
 
-## Ошибка докера
+```bash
+docker compose up -d --build
+docker compose exec web composer install
+```
 
-В случае ошибки такого вида:
+Приложение откроется по адресу [http://localhost](http://localhost).
 
-    Error response from daemon: pull access denied for nginx, repository does not exist or may require 'docker login': denied:
-    <html>
-    <body>
-    <h1>403 Forbidden</h1>
-    Since Docker is a US company, we must comply with US export control regulations.
-    In an effort to comply with these, we now block all IP addresses that are located in Cuba, Iran, North Korea, Republic of Crimea, Sudan, and Syria.
-    If you are not in one of these cities, countries, or regions and are blocked, please reach out to https://hub.docker.com/support/contact/
-    </body>
-    </html>
+## База данных
 
-Нужно использовать прокси сервер
+Таблица `comments` создаётся автоматически при первом запуске контейнера MySQL.
 
-### Как его подключить
+Для просмотра базы можно использовать Adminer: [http://localhost:8080](http://localhost:8080).
 
-1. через конфиг докера (как зеркало docker.io)
+Данные для входа:
 
-    конфиг расположен в
+```text
+Система: MySQL
+Сервер: db
+Пользователь: root
+Пароль: cod31gn1t3
+База данных: codeigniter_db
+```
 
-    | операционная система     |          путь к файлу конфигурации          |
-    | ------------------------ | :-----------------------------------------: |
-    | Linux, обычная установка |           /etc/docker/daemon.json           |
-    | Linux, режим rootless    |        ~/.config/docker/daemon.json         |
-    | Windows                  |  C:\ProgramData\docker\config\daemon.json   |
-    | Windows с Docker Desktop | C:\Users\<Пользователь>\.docker\daemon.json |
+## Проверка
 
-    конфиг:
-    { "registry-mirrors" : [ "https://dockerhub.timeweb.cloud" ] }
+1. Откройте `http://localhost`.
+2. Заполните email, текст и дату.
+3. Добавьте несколько комментариев.
+4. Проверьте сортировку и переключение страниц.
+5. Удалите один из комментариев.
+6. Попробуйте отправить форму с некорректным email.
 
-    чтобы конфиг применился потребуется перезапустить конфигурацию:
-    systemctl reload docker
+Добавление, удаление, сортировка и пагинация работают без перезагрузки страницы.
 
+## Команды
 
-    теперь при попытке загрузки образа, Docker будет сначала пытаться использовать прокси.
+Состояние контейнеров:
 
-1. явное указание адреса
+```bash
+docker compose ps
+```
 
-    ```
-    docker pull dockerhub.timeweb.cloud/library/alpine:latest
+Логи:
 
-    docker pull dockerhub.timeweb.cloud/openresty/openresty:latest
-    ```
+```bash
+docker compose logs -f
+```
 
-## Описание записи
+Остановка:
 
--   name -  почта создателя;
--   text - Текст комментария;
--   date - Дата создания комментария в строковом формате(выбирается создателем).
+```bash
+docker compose down
+```
 
 ## Стек
 
 - PHP 8.2;
-- MYSQL 8;
 - CodeIgniter 4;
+- MySQL 8.4;
 - jQuery 3;
 - Bootstrap 4.
-
-## Задание
-
-Создать сайт со списком комментариев.
-Форма с добавлением комментариевдолжна располагаться под уже добавленными комментариями.
-
-Требования к разработке:
-
--   добавление и удаление комментариев (желательно, без перезагрузки страницы);
--   постраничный просмотр комментариев (3 комментария на страницу c возможностью выбора конкретной);
--   сортировка по:
-    -   id;
-    -   дате добавления;
--   направления сортировки:
-    -   по возрастанию;
-    -   по убыванию;
--   использование валидации почты при вводе для пользователя (с отображением ошибки), а также на сервере;
--   использование адаптивной верстки;
--   использование jQuery.
